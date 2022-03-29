@@ -5,13 +5,13 @@ import {render, screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import faker from 'faker'
 import Login from '../../components/login'
+import type {LoginFormValues} from '../../components/login'
 
-const getRandomUsername = () => faker.internet.userName()
-const getRandomPassword = () => faker.internet.password()
-const buildLoginForm = () => {
+const buildLoginForm = (overrides?: Partial<LoginFormValues>) => {
   return {
-    username: getRandomUsername(),
-    password: getRandomPassword(),
+    username: faker.internet.userName(),
+    password: faker.internet.password(),
+    ...overrides,
   }
 }
 
@@ -20,7 +20,9 @@ test('submitting the form calls onSubmit with username and password', () => {
 
   render(<Login onSubmit={handleSubmit} />)
 
-  const {username, password} = buildLoginForm()
+  const {username, password} = buildLoginForm({
+    username: 'bestUsernameInTheWord',
+  })
 
   const usernameField = screen.getByLabelText('Username')
   userEvent.type(usernameField, username)
