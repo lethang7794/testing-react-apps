@@ -3,6 +3,7 @@
 
 // 🐨 add `screen` to the import here:
 import {render, fireEvent, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import Counter from '../../components/counter'
 
 test('counter increments and decrements when the buttons are clicked', () => {
@@ -24,8 +25,8 @@ test('counter increments and decrements when the buttons are clicked', () => {
     throw new Error(`couldn't find message div`)
   }
   expect(message).toHaveTextContent('Current count: 0')
-  fireEvent.click(increment)
+  userEvent.click(increment)
   expect(message).toHaveTextContent('Current count: 1')
-  fireEvent.click(decrement)
+  userEvent.click(decrement)
   expect(message).toHaveTextContent('Current count: 0')
 })
