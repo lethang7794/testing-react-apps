@@ -38,12 +38,12 @@ test('counter increments and decrements when the buttons are clicked', () => {
     throw new Error(`couldn't find message div`)
   }
 
-  expect(message.textContent).toBe('Current count: 0')
+  expect(message).toHaveTextContent('Current count: 0')
 
   // 🐨 replace the next two statements with `fireEvent.click(button)`
   fireEvent.click(increment)
-  expect(message.textContent).toBe('Current count: 1')
+  expect(message).toHaveTextContent('Current count: 1')
 
   fireEvent.click(decrement)
-  expect(message.textContent).toBe('Current count: 0')
+  expect(message).toHaveTextContent('Current count: 0')
 })
