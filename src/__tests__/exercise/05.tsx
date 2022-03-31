@@ -43,7 +43,14 @@ test(`logging in without password displays error message`, async () => {
 
   await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
 
-  expect(screen.getByRole('alert')).toHaveTextContent('password required')
+  expect(screen.getByRole('alert')).toMatchInlineSnapshot(`
+    <div
+      role="alert"
+      style="color: red;"
+    >
+      password required
+    </div>
+  `)
 })
 
 test(`logging in without username displays error message`, async () => {
@@ -55,5 +62,12 @@ test(`logging in without username displays error message`, async () => {
 
   await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
 
-  expect(screen.getByRole('alert')).toHaveTextContent('username required')
+  expect(screen.getByRole('alert')).toMatchInlineSnapshot(`
+    <div
+      role="alert"
+      style="color: red;"
+    >
+      username required
+    </div>
+  `)
 })
