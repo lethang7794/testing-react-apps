@@ -8,6 +8,7 @@ import {setupServer} from 'msw/node'
 import Login from '../../components/login-submission'
 import {LoginFormValues} from '../../components/login'
 import {handlers} from '../../test/server-handlers'
+import {rest} from 'msw'
 
 const buildLoginForm = build<LoginFormValues>({
   fields: {
@@ -61,3 +62,24 @@ test(`logging in without username displays error message`, async () => {
     `"username required"`,
   )
 })
+
+test('logging in display error message when there is unknown server error', async () => {
+  const textErrorMessage = 'Oh no, something went wrong.'
+  server.use(
+    rest.post(
+      'https://auth-provider.example.com/api/login',
+      async (_req, res, ctx) =>
+        res(ctx.status(500), ctx.json({message: textErrorMessage})),
+    ),
+  )
+
+  render(<Login />)
+
+  userEvent.click(screen.getByRole('button', {name: /submit/i}))
+
+  await waitForElementToBeRemoved(() => screen.getByLabelText(/loading/i))
+
+  expect(screen.getByRole('alert').textContent).toEqual(textErrorMessage)
+})
+
+server.resetHandlers()
