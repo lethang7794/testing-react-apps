@@ -2,16 +2,23 @@
 // http://localhost:3000/easy-button
 
 import * as React from 'react'
-import {render, screen} from '@testing-library/react'
-import {ThemeProvider} from '../../components/theme'
+import {render, RenderOptions, screen} from '@testing-library/react'
+import {Theme, ThemeProvider} from '../../components/theme'
 import EasyButton from '../../components/easy-button'
 
-test('renders with the light styles for the light theme', () => {
-  function Wrapper({children}) {
-    return <ThemeProvider>{children}</ThemeProvider>
+function renderWithProvider(
+  ui: React.ReactElement,
+  {theme = 'light', ...options}: RenderOptions & {theme?: Theme} = {},
+) {
+  function Wrapper({children}: {children: React.ReactNode}) {
+    return <ThemeProvider initialTheme={theme}>{children}</ThemeProvider>
   }
 
-  render(<EasyButton>Easy</EasyButton>, {wrapper: Wrapper})
+  return render(ui, {wrapper: Wrapper, ...options})
+}
+
+test('renders with the light styles for the light theme', () => {
+  renderWithProvider(<EasyButton>Easy</EasyButton>, {theme: 'light'})
   const button = screen.getByRole('button', {name: /easy/i})
   expect(button).toHaveStyle(`
       background-color: white;
@@ -20,11 +27,7 @@ test('renders with the light styles for the light theme', () => {
 })
 
 test('renders with the dark styles for the dark theme', () => {
-  function Wrapper({children}) {
-    return <ThemeProvider initialTheme="dark">{children}</ThemeProvider>
-  }
-
-  render(<EasyButton>Easy</EasyButton>, {wrapper: Wrapper})
+  renderWithProvider(<EasyButton>Easy</EasyButton>, {theme: 'dark'})
   const button = screen.getByRole('button', {name: /easy/i})
   expect(button).toHaveStyle(`
       background-color: black;
