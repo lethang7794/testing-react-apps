@@ -32,6 +32,26 @@ test('allows customization of the step', () => {
   expect(result.current.count).toBe(10)
 })
 
+test('allows change step', () => {
+  const {result, rerender} = renderHook(({step}) => useCounter({step}), {
+    initialProps: {step: 5},
+  })
+
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(5)
+
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(10)
+
+  rerender({step: 10})
+
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(20)
+
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(30)
+})
+
 /*
 eslint
   no-unused-vars: "off",
