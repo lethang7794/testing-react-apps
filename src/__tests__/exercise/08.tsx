@@ -1,49 +1,35 @@
 // testing custom hooks
 // http://localhost:3000/counter-hook
 
-import {render, act} from '@testing-library/react'
+import {renderHook, act} from '@testing-library/react-hooks'
 import useCounter from '../../components/use-counter'
 
-type UseCounterParams = Parameters<typeof useCounter>[0]
-
-function setup({
-  initialProps,
-}: {initialProps?: UseCounterParams} = {}): ReturnType<typeof useCounter> {
-  const results = {}
-  function TestComponent(props) {
-    Object.assign(results, useCounter(props))
-    return null
-  }
-  render(<TestComponent {...initialProps} />)
-  return results as ReturnType<typeof useCounter>
-}
-
 test('exposes the count and increment/decrement functions', () => {
-  const result = setup()
+  const {result} = renderHook(() => useCounter())
 
-  expect(result.count).toBe(0)
+  expect(result.current.count).toBe(0)
 
-  act(() => result.increment())
-  expect(result.count).toBe(1)
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(1)
 
-  act(() => result.decrement())
-  expect(result.count).toBe(0)
+  act(() => result.current.decrement())
+  expect(result.current.count).toBe(0)
 })
 
 test('allows customization of the initial count', () => {
-  const result = setup({initialProps: {initialCount: 10}})
+  const {result} = renderHook(() => useCounter({initialCount: 10}))
 
-  expect(result.count).toBe(10)
+  expect(result.current.count).toBe(10)
 })
 
 test('allows customization of the step', () => {
-  const result = setup({initialProps: {step: 5}})
+  const {result} = renderHook(() => useCounter({step: 5}))
 
-  act(() => result.increment())
-  expect(result.count).toBe(5)
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(5)
 
-  act(() => result.increment())
-  expect(result.count).toBe(10)
+  act(() => result.current.increment())
+  expect(result.current.count).toBe(10)
 })
 
 /*
